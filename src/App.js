@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React from "react"
+import "./App.css"
+import Gallery from "./Gallery"
+import fetch from "./serices/flicker-service"
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.initialLatitude = "45.051142"
+        this.state = {
+            latitude: this.initialLatitude,
+            longitude: "23.236676",
+        }
+    }
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(location => {
+            this.setState({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            })
+        })
+    }
+    render() {
+        if (this.state.latitude === this.initialLatitude) {
+            return (
+                <div className="App">
+                    Using coordinates for Tirga Jiu, Romania
+                    <Gallery
+                        latitude={this.state.latitude}
+                        longitude={this.state.longitude}
+                        searchTerm="dog"
+                    />
+                </div>
+            )
+        }
+        return (
+            <div className="App">
+                Using coordinates for your current location
+                <Gallery
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    searchTerm="dog"
+                />
+            </div>
+        )
+    }
 }
-
-export default App;
+export default App
